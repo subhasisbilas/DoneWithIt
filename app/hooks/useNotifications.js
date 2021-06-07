@@ -1,25 +1,33 @@
 import { useEffect } from "react";
-import { Notifications } from "expo";
-import * as Permissions from "expo-permissions";
-
+import * as Notifications from "expo-notifications";
 import expoPushTokensApi from "../api/expoPushTokens";
+import logger from "../utility/logger";
 
 export default useNotifications = (notificationListener) => {
   useEffect(() => {
     registerForPushNotifications();
 
-    if (notificationListener) Notifications.addListener(notificationListener);
+    if (notificationListener)
+      Notifications.addNotificationReceivedListener(notificationListener);
   }, []);
 
   const registerForPushNotifications = async () => {
     try {
-      const permission = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      if (!permission.granted) return;
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") return;
 
-      const token = await Notifications.getExpoPushTokenAsync();
+      const tokenObject = await Notifications.getExpoPushTokenAsync();
+      const token = tokenObject.data;
+      logger.log("expo push'token: ", token);
       expoPushTokensApi.register(token);
     } catch (error) {
-      console.log("Error getting a push token", error);
+      logger.log("Error getting a push token", error);
     }
   };
 };

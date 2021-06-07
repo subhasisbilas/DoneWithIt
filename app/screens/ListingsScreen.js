@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 
 import ActivityIndicator from "../components/ActivityIndicator";
@@ -10,13 +10,37 @@ import routes from "../navigation/routes";
 import Screen from "../components/Screen";
 import AppText from "../components/Text";
 import useApi from "../hooks/useApi";
+import useAuth from "../auth/useAuth";
+import logger from "../utility/logger";
 
-function ListingsScreen({ navigation }) {
-  const getListingsApi = useApi(listingsApi.getListings);
+function ListingsScreen({ navigation, route }) {
+  const { user } = useAuth();
+  const getListingsApi = useApi(
+    route.params?.filterUser
+      ? listingsApi.getUserListings
+      : listingsApi.getListings
+  );
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    getListingsApi.request();
-  }, []);
+    const reloadData = route.params.reloadData;
+    logger.log("reloadData useEffect", route.params);
+    if (reloadData) {
+      getListings(route);
+    }
+  }, [route.params]);
+
+  const getListings = (route) => {
+    const filterUser = route.params.filterUser;
+
+    if (!filterUser) {
+      logger.log("getListings: ", filterUser);
+      getListingsApi.request();
+    } else {
+      logger.log("getUserListings: ", user);
+      getListingsApi.request();
+    }
+  };
 
   return (
     <>
@@ -40,6 +64,10 @@ function ListingsScreen({ navigation }) {
               thumbnailUrl={item.images[0].thumbnailUrl}
             />
           )}
+          refreshing={refreshing}
+          onRefresh={() => {
+            getListings(route);
+          }}
         />
       </Screen>
     </>

@@ -1,8 +1,11 @@
+import useAuth from "../auth/useAuth";
+import logger from "../utility/logger";
 import client from "./client";
 
 const endpoint = "/listings";
 
-const getListings = () => client.get(endpoint);
+const getListings = () => client.get("/listings");
+const getUserListings = () => client.get("/my/listings");
 
 export const addListing = (listing, onUploadProgress) => {
   const data = new FormData();
@@ -31,4 +34,5 @@ export const addListing = (listing, onUploadProgress) => {
 export default {
   addListing,
   getListings,
+  getUserListings,
 };

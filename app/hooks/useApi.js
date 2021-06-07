@@ -1,4 +1,5 @@
 import { useState } from "react";
+import logger from "../utility/logger";
 
 export default useApi = (apiFunc) => {
   const [data, setData] = useState([]);
@@ -8,6 +9,8 @@ export default useApi = (apiFunc) => {
   const request = async (...args) => {
     setLoading(true);
     const response = await apiFunc(...args);
+    // logger.log("useApi:response");
+    // logger.log(response.data);
     setLoading(false);
 
     setError(!response.ok);

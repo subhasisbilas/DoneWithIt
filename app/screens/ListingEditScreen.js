@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import * as Yup from "yup";
+import logger from "../utility/logger";
 
 import {
   Form,
@@ -14,6 +15,7 @@ import FormImagePicker from "../components/forms/FormImagePicker";
 import listingsApi from "../api/listings";
 import useLocation from "../hooks/useLocation";
 import UploadScreen from "./UploadScreen";
+import routes from "../navigation/routes";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
@@ -80,7 +82,7 @@ const categories = [
   },
 ];
 
-function ListingEditScreen() {
+function ListingEditScreen({ navigation }) {
   const location = useLocation();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -92,13 +94,17 @@ function ListingEditScreen() {
       { ...listing, location },
       (progress) => setProgress(progress)
     );
-
+    logger.log("addListing: ", result);
     if (!result.ok) {
       setUploadVisible(false);
       return alert("Could not save the listing");
     }
 
     resetForm();
+    navigation.navigate(routes.LISTINGS, {
+      reloadData: true,
+      filterUser: false,
+    });
   };
 
   return (

@@ -29,7 +29,7 @@ function RegisterScreen() {
 
   const handleSubmit = async (userInfo) => {
     const result = await registerApi.request(userInfo);
-
+    console.log("register result", result);
     if (!result.ok) {
       if (result.data) setError(result.data.error);
       else {

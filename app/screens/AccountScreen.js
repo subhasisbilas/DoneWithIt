@@ -7,6 +7,7 @@ import Icon from "../components/Icon";
 import routes from "../navigation/routes";
 import Screen from "../components/Screen";
 import useAuth from "../auth/useAuth";
+import logger from "../utility/logger";
 
 const menuItems = [
   {
@@ -14,6 +15,23 @@ const menuItems = [
     icon: {
       name: "format-list-bulleted",
       backgroundColor: colors.primary,
+    },
+    targetScreen: routes.LISTINGS,
+    params: {
+      reloadData: true,
+      filterUser: true,
+    },
+  },
+  {
+    title: "All Listings",
+    icon: {
+      name: "format-list-bulleted",
+      backgroundColor: colors.primary,
+    },
+    targetScreen: routes.LISTINGS,
+    params: {
+      reloadData: true,
+      filterUser: false,
     },
   },
   {
@@ -28,6 +46,15 @@ const menuItems = [
 
 function AccountScreen({ navigation }) {
   const { user, logOut } = useAuth();
+
+  const navigateTo = (item) => {
+    logger.log("navigateTo: ", item);
+    if (item.params === undefined) {
+      navigation.navigate(item.targetScreen);
+    } else {
+      navigation.navigate(item.targetScreen, item.params);
+    }
+  };
 
   return (
     <Screen style={styles.screen}>
@@ -52,7 +79,7 @@ function AccountScreen({ navigation }) {
                   backgroundColor={item.icon.backgroundColor}
                 />
               }
-              onPress={() => navigation.navigate(item.targetScreen)}
+              onPress={() => navigateTo(item)}
             />
           )}
         />

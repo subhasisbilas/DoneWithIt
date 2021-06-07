@@ -2,13 +2,14 @@ import Constants from "expo-constants";
 
 const settings = {
   dev: {
-    apiUrl: "http://192.168.0.14:9000/api",
+    // apiURL: "http://192.168.1.10:9000/api", // donna
+    apiURL: "http://192.168.1.146:9000/api",
   },
   staging: {
-    apiUrl: "http://192.168.0.14:9000/api",
+    apiURL: "http://192.168.1.146:9000/api",
   },
   prod: {
-    apiUrl: "http://192.168.0.14:9000/api",
+    apiURL: "http://192.168.1.146:9000/api",
   },
 };
 
