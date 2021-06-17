@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import AccountNavigator from "./AccountNavigator";
 import FeedNavigator from "./FeedNavigator";
+import { createStackNavigator } from "@react-navigation/stack";
 import ListingEditScreen from "../screens/ListingEditScreen";
 import NewListingButton from "./NewListingButton";
 import routes from "./routes";
@@ -11,6 +12,13 @@ import navigation from "./rootNavigation";
 import useNotifications from "../hooks/useNotifications";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+const EditNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="Add Listing" component={ListingEditScreen} />
+  </Stack.Navigator>
+);
 
 const AppNavigator = () => {
   useNotifications();
@@ -27,14 +35,9 @@ const AppNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="ListingEdit"
-        component={ListingEditScreen}
-        options={({ navigation }) => ({
-          tabBarButton: () => (
-            <NewListingButton
-              onPress={() => navigation.navigate(routes.LISTING_EDIT)}
-            />
-          ),
+        name="Add Listing"
+        component={EditNavigator}
+        options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="plus-circle"
@@ -42,7 +45,7 @@ const AppNavigator = () => {
               size={size}
             />
           ),
-        })}
+        }}
       />
       <Tab.Screen
         name="Account"

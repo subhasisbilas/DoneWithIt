@@ -4,7 +4,7 @@
     "owner": "artgravinateam",
     "slug": "DoneWithIt",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
     "splash": {
