@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
+  ScrollView,
 } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 
@@ -17,29 +18,31 @@ function ListingDetailsScreen({ route }) {
   const listing = route.params;
 
   return (
-    <KeyboardAvoidingView
-      behavior="position"
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 100}
-    >
-      <Image
-        style={styles.image}
-        preview={{ uri: listing.images[0].thumbnailUrl }}
-        tint="light"
-        uri={listing.images[0].url}
-      />
-      <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{listing.title}</Text>
-        <Text style={styles.price}>${listing.price}</Text>
-        <View style={styles.userContainer}>
-          <ListItem
-            image={require("../assets/mosh.jpg")}
-            title="Mosh Hamedani"
-            subTitle="5 Listings"
-          />
+    <ScrollView>
+      <KeyboardAvoidingView
+        behavior="position"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 100}
+      >
+        <Image
+          style={styles.image}
+          preview={{ uri: listing.images[0].thumbnailUrl }}
+          tint="light"
+          uri={listing.images[0].url}
+        />
+        <View style={styles.detailsContainer}>
+          <Text style={styles.title}>{listing.title}</Text>
+          <Text style={styles.price}>${listing.price}</Text>
+          <View style={styles.userContainer}>
+            <ListItem
+              image={require("../assets/mosh.jpg")}
+              title="Mosh Hamedani"
+              subTitle="5 Listings"
+            />
+          </View>
+          <ContactSellerForm listing={listing} />
         </View>
-        <ContactSellerForm listing={listing} />
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
