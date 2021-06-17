@@ -24,6 +24,7 @@ const isExpired = (item) => {
 
 const get = async (key) => {
   try {
+    console.log("cache.get", key);
     const value = await AsyncStorage.getItem(prefix + key);
     const item = JSON.parse(value);
 

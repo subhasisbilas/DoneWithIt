@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, KeyboardAvoidingView } from "react-native";
 import * as Yup from "yup";
 import logger from "../utility/logger";
 
@@ -114,49 +114,57 @@ function ListingEditScreen({ navigation }) {
         progress={progress}
         visible={uploadVisible}
       />
-      <Form
-        initialValues={{
-          title: "",
-          price: "",
-          description: "",
-          category: null,
-          images: [],
-        }}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
+      <KeyboardAvoidingView
+        behavior="position"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 50 : 100}
       >
-        <FormImagePicker name="images" />
-        <FormField maxLength={255} name="title" placeholder="Title" />
-        <FormField
-          keyboardType="numeric"
-          maxLength={8}
-          name="price"
-          placeholder="Price"
-          width={120}
-        />
-        <Picker
-          items={categories}
-          name="category"
-          numberOfColumns={3}
-          PickerItemComponent={CategoryPickerItem}
-          placeholder="Category"
-          width="50%"
-        />
-        <FormField
-          maxLength={255}
-          multiline
-          name="description"
-          numberOfLines={3}
-          placeholder="Description"
-        />
-        <SubmitButton title="Post" />
-      </Form>
+        <Form
+          initialValues={{
+            title: "",
+            price: "",
+            description: "",
+            category: null,
+            images: [],
+          }}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
+        >
+          <FormImagePicker name="images" />
+          <FormField maxLength={255} name="title" placeholder="Title" />
+          <FormField
+            keyboardType="numeric"
+            maxLength={8}
+            name="price"
+            placeholder="Price"
+            width={120}
+          />
+          <Picker
+            items={categories}
+            name="category"
+            numberOfColumns={3}
+            PickerItemComponent={CategoryPickerItem}
+            placeholder="Category"
+            width="50%"
+          />
+          <FormField
+            maxLength={255}
+            multiline
+            name="description"
+            numberOfLines={3}
+            autoCorrect={false}
+            placeholder="Description"
+          />
+          <SubmitButton title="Post" />
+        </Form>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    // flexDirection: "row",
+    flex: 1,
     padding: 10,
   },
 });

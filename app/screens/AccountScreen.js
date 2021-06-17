@@ -1,9 +1,10 @@
 import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, Alert } from "react-native";
 
 import { ListItem, ListItemSeparator } from "../components/lists";
 import colors from "../config/colors";
 import Icon from "../components/Icon";
+import listingsApi from "../api/listings";
 import routes from "../navigation/routes";
 import Screen from "../components/Screen";
 import useAuth from "../auth/useAuth";
@@ -46,6 +47,7 @@ const menuItems = [
 
 function AccountScreen({ navigation }) {
   const { user, logOut } = useAuth();
+  const initializeListingsApi = useApi(listingsApi.initializeListings);
 
   const navigateTo = (item) => {
     logger.log("navigateTo: ", item);
@@ -54,6 +56,35 @@ function AccountScreen({ navigation }) {
     } else {
       navigation.navigate(item.targetScreen, item.params);
     }
+  };
+
+  const initializeListings = () => {
+    Alert.alert(
+      "Install Sample Listings",
+      "This will remove all current listings, and replace with sample data!",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Sample Listings Cancelled"),
+          style: "cancel",
+        },
+        { text: "Install Samples", onPress: () => initListings() },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const initListings = async () => {
+    console.log("initialize Listings");
+    const resp = await initializeListingsApi.request();
+    const navItem = {
+      targetScreen: routes.LISTINGS,
+      params: {
+        reloadData: true,
+        filterUser: false,
+      },
+    };
+    navigateTo(navItem);
   };
 
   return (
@@ -84,6 +115,13 @@ function AccountScreen({ navigation }) {
           )}
         />
       </View>
+      <ListItem
+        title="Initialize Sample Listings"
+        IconComponent={
+          <Icon name="alert-outline" backgroundColor={colors.primary} />
+        }
+        onPress={() => initializeListings()}
+      />
       <ListItem
         title="Log Out"
         IconComponent={<Icon name="logout" backgroundColor="#ffe66d" />}

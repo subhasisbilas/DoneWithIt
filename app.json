@@ -1,9 +1,10 @@
 {
   "expo": {
     "name": "DoneWithIt",
+    "owner": "artgravinateam",
     "slug": "DoneWithIt",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.0",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
     "splash": {
@@ -32,14 +33,6 @@
       "bugsnag": {
         "apiKey": "1f89967da16ead7f99e7a2ad11c8f9ac"
       }
-    },
-    "hooks": {
-      "postPublish": [
-        {
-          "file": "@bugsnag/expo/hooks/post-publish.js",
-          "config": {}
-        }
-      ]
     }
   }
 }

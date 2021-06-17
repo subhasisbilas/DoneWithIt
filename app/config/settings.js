@@ -2,14 +2,15 @@ import Constants from "expo-constants";
 
 const settings = {
   dev: {
-    // apiURL: "http://192.168.1.10:9000/api", // donna
-    apiURL: "http://192.168.1.146:9000/api",
+    // apiURL: "http://192.168.1.10:8080/api", // donna
+    apiURL: "http://192.168.1.146:8080/api",
+    // apiURL: "https://backend-donewithit.ue.r.appspot.com/api",
   },
   staging: {
-    apiURL: "http://192.168.1.146:9000/api",
+    apiURL: "https://backend-donewithit.ue.r.appspot.com/api",
   },
   prod: {
-    apiURL: "http://192.168.1.146:9000/api",
+    apiURL: "https://backend-donewithit.ue.r.appspot.com/api",
   },
 };
 

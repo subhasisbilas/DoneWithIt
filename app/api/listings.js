@@ -7,7 +7,7 @@ const endpoint = "/listings";
 const getListings = () => client.get("/listings");
 const getUserListings = () => client.get("/my/listings");
 
-export const addListing = (listing, onUploadProgress) => {
+const addListing = (listing, onUploadProgress) => {
   const data = new FormData();
   data.append("title", listing.title);
   data.append("price", listing.price);
@@ -24,15 +24,18 @@ export const addListing = (listing, onUploadProgress) => {
 
   if (listing.location)
     data.append("location", JSON.stringify(listing.location));
-
+  console.log("addListing: ", data);
   return client.post(endpoint, data, {
     onUploadProgress: (progress) =>
       onUploadProgress(progress.loaded / progress.total),
   });
 };
 
+const initializeListings = () => client.get("/initialize");
+
 export default {
   addListing,
   getListings,
   getUserListings,
+  initializeListings,
 };
