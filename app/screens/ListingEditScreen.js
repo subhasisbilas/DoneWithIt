@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, KeyboardAvoidingView, ScrollView } from "react-native";
 import * as Yup from "yup";
 import logger from "../utility/logger";
 
@@ -109,15 +109,13 @@ function ListingEditScreen({ navigation }) {
 
   return (
     <Screen style={styles.container}>
-      <UploadScreen
-        onDone={() => setUploadVisible(false)}
-        progress={progress}
-        visible={uploadVisible}
-      />
-      <KeyboardAvoidingView
-        behavior="position"
-        keyboardVerticalOffset={Platform.OS === "ios" ? 50 : 100}
-      >
+      <ScrollView>
+        <UploadScreen
+          onDone={() => setUploadVisible(false)}
+          progress={progress}
+          visible={uploadVisible}
+        />
+
         <Form
           initialValues={{
             title: "",
@@ -156,7 +154,7 @@ function ListingEditScreen({ navigation }) {
           />
           <SubmitButton title="Post" />
         </Form>
-      </KeyboardAvoidingView>
+      </ScrollView>
     </Screen>
   );
 }
