@@ -31,10 +31,16 @@ const addListing = (listing, onUploadProgress) => {
   });
 };
 
+const deleteListing = (listing) => {
+  let url = `/listing/${listing.id}`;
+  return client.delete(url);
+};
+
 const initializeListings = () => client.get("/initialize");
 
 export default {
   addListing,
+  deleteListing,
   getListings,
   getUserListings,
   initializeListings,

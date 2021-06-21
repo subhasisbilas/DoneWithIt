@@ -14,8 +14,23 @@ apiClient.addAsyncRequestTransform(async (request) => {
 });
 
 const get = apiClient.get;
+
 apiClient.get = async (url, params, axiosConfig) => {
   const response = await get(url, params, axiosConfig);
+
+  if (response.ok) {
+    cache.store(url, response.data);
+    return response;
+  }
+
+  const data = await cache.get(url);
+  return data ? { ok: true, data } : response;
+};
+
+const remove = apiClient.delete;
+apiClient.delete = async (url, params, axiosConfig) => {
+  console.log("apiClient.delte", url);
+  const response = await remove(url, params, axiosConfig);
 
   if (response.ok) {
     cache.store(url, response.data);

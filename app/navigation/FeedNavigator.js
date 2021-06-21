@@ -1,7 +1,8 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import ListingsScreen from "../screens/ListingsScreen";
+
 import ListingDetailsScreen from "../screens/ListingDetailsScreen";
+import ListingsScreen from "../screens/ListingsScreen";
 
 const Stack = createStackNavigator();
 
@@ -12,11 +13,7 @@ const FeedNavigator = () => (
       component={ListingsScreen}
       initialParams={{ reloadData: true, filterUser: false }}
     />
-    <Stack.Screen
-      name="ListingDetails"
-      component={ListingDetailsScreen}
-      options={{ title: "Details" }}
-    />
+    <Stack.Screen name="ListingDetails" component={ListingDetailsScreen} />
   </Stack.Navigator>
 );
 
