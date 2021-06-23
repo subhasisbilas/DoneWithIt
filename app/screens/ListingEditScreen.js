@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { StyleSheet, KeyboardAvoidingView, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
 import * as Yup from "yup";
 import logger from "../utility/logger";
 
@@ -82,10 +88,24 @@ const categories = [
   },
 ];
 
-function ListingEditScreen({ navigation }) {
+function ListingEditScreen({ navigation, route }) {
   const location = useLocation();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isAddMode, setIsAddMode] = useState(false);
+
+  useEffect(() => {
+    console.log("route", route.params);
+
+    navigation.setOptions({
+      headerTitle: route.params.isAddMode ? "Add Listing" : "Edit Listing",
+    });
+    setIsAddMode(route.params.isAddMode);
+  }, [route.params]);
+
+  React.useLayoutEffect(() => {
+    console.log("useLayoutEffect: ", isAddMode);
+  });
 
   const handleSubmit = async (listing, { resetForm }) => {
     setProgress(0);

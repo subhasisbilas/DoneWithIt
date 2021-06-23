@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 
-import Icon from "../components/Icon";
 import colors from "../config/colors";
 import ContactSellerForm from "../components/ContactSellerForm";
 import ListItem from "../components/lists/ListItem";
@@ -18,6 +17,7 @@ import Text from "../components/Text";
 import useAuth from "../auth/useAuth";
 import useApi from "../hooks/useApi";
 import listingsApi from "../api/listings";
+import routes from "../navigation/routes";
 
 function ListingDetailsScreen({ navigation, route }) {
   const listing = route.params;
@@ -33,9 +33,14 @@ function ListingDetailsScreen({ navigation, route }) {
         headerRight: () => (
           <TouchableOpacity
             style={styles.button}
-            onPress={() => deleteListingAlert()}
+            onPress={() => {
+              navigation.navigate(routes.LISTING_EDIT, {
+                isAddMode: false,
+                listing,
+              });
+            }}
           >
-            <Icon backgroundColor={colors.primary} name={"delete"} size={40} />
+            <Text style={{ color: "blue" }}>Edit</Text>
           </TouchableOpacity>
         ),
       });
@@ -99,6 +104,7 @@ function ListingDetailsScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   button: {
+    color: colors.secondary,
     alignItems: "center",
     padding: 10,
   },
