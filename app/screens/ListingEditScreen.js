@@ -127,6 +127,26 @@ function ListingEditScreen({ navigation, route }) {
     });
   };
 
+  const getInitialValues = () => {
+    let values = {
+      title: "",
+      price: "",
+      description: "",
+      category: null,
+      images: [],
+    };
+    if (!isAddMode) {
+      const listing = route.params.listing ? route.params.listing : values;
+      values.title = listing.title;
+      values.price = listing.price.toString();
+      values.description = listing.description;
+      values.category = categories[listing.categoryId - 1];
+      const imageUris = listing.images.map((image) => image.url);
+      values.images = imageUris;
+    }
+    return values;
+  };
+
   return (
     <Screen style={styles.container}>
       <ScrollView>
@@ -137,13 +157,7 @@ function ListingEditScreen({ navigation, route }) {
         />
 
         <Form
-          initialValues={{
-            title: "",
-            price: "",
-            description: "",
-            category: null,
-            images: [],
-          }}
+          initialValues={getInitialValues()}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >

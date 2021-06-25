@@ -2,7 +2,7 @@ import Constants from "expo-constants";
 
 const settings = {
   dev: {
-    // apiURL: "http://192.168.1.10:8080/api", // donna
+    // apiURL: "http://192.168.1.9:8080/api", // donna
     apiURL: "http://192.168.1.146:8080/api",
     // apiURL: "https://backend-donewithit.ue.r.appspot.com/api",
   },
