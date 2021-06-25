@@ -6,7 +6,6 @@ import {
   Platform,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 
@@ -46,32 +45,6 @@ function ListingDetailsScreen({ navigation, route }) {
       });
     }
   }, [navigation]);
-
-  const deleteListing = async () => {
-    console.log("delete listing: ", listing.userId, user.userId);
-    try {
-      const data = await deleteListingApi.request(listing);
-      console.log("finished: ", data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const deleteListingAlert = () => {
-    Alert.alert(
-      "Delete Listing",
-      "This will remove all data relevant to the current listing!",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Delete Listings Cancelled"),
-          style: "cancel",
-        },
-        { text: "Delete Listing", onPress: () => deleteListing() },
-      ],
-      { cancelable: false }
-    );
-  };
 
   return (
     <ScrollView>

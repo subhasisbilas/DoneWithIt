@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from "react-native";
 import * as Yup from "yup";
 import logger from "../utility/logger";
@@ -17,8 +18,10 @@ import {
 } from "../components/forms";
 import CategoryPickerItem from "../components/CategoryPickerItem";
 import Screen from "../components/Screen";
+import Button from "../components/Button";
 import FormImagePicker from "../components/forms/FormImagePicker";
 import listingsApi from "../api/listings";
+import categoriesApi from "../api/categories";
 import useLocation from "../hooks/useLocation";
 import UploadScreen from "./UploadScreen";
 import routes from "../navigation/routes";
@@ -30,63 +33,6 @@ const validationSchema = Yup.object().shape({
   category: Yup.object().required().nullable().label("Category"),
   images: Yup.array().min(1, "Please select at least one image."),
 });
-
-const categories = [
-  {
-    backgroundColor: "#fc5c65",
-    icon: "floor-lamp",
-    label: "Furniture",
-    value: 1,
-  },
-  {
-    backgroundColor: "#fd9644",
-    icon: "car",
-    label: "Cars",
-    value: 2,
-  },
-  {
-    backgroundColor: "#fed330",
-    icon: "camera",
-    label: "Cameras",
-    value: 3,
-  },
-  {
-    backgroundColor: "#26de81",
-    icon: "cards",
-    label: "Games",
-    value: 4,
-  },
-  {
-    backgroundColor: "#2bcbba",
-    icon: "shoe-heel",
-    label: "Clothing",
-    value: 5,
-  },
-  {
-    backgroundColor: "#45aaf2",
-    icon: "basketball",
-    label: "Sports",
-    value: 6,
-  },
-  {
-    backgroundColor: "#4b7bec",
-    icon: "headphones",
-    label: "Movies & Music",
-    value: 7,
-  },
-  {
-    backgroundColor: "#a55eea",
-    icon: "book-open-variant",
-    label: "Books",
-    value: 8,
-  },
-  {
-    backgroundColor: "#778ca3",
-    icon: "application",
-    label: "Other",
-    value: 9,
-  },
-];
 
 function ListingEditScreen({ navigation, route }) {
   const location = useLocation();
@@ -105,6 +51,7 @@ function ListingEditScreen({ navigation, route }) {
 
   React.useLayoutEffect(() => {
     console.log("useLayoutEffect: ", isAddMode);
+    console.log("progress: ", progress);
   });
 
   const handleSubmit = async (listing, { resetForm }) => {
@@ -127,6 +74,45 @@ function ListingEditScreen({ navigation, route }) {
     });
   };
 
+  const deleteListingApi = useApi(listingsApi.deleteListing);
+
+  const deleteListing = async () => {
+    try {
+      setProgress(0);
+      setUploadVisible(true);
+      const listing = route.params.listing;
+      console.log("delete listing: ", listing.title);
+      const result = await deleteListingApi.request(listing, (progress) =>
+        setProgress(progress)
+      );
+      if (!result.ok) {
+        console.log("finished: ", result.data);
+      }
+      navigation.navigate(routes.LISTINGS, {
+        reloadData: true,
+        filterUser: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteListingAlert = () => {
+    Alert.alert(
+      "Delete Listing",
+      "This will remove all data relevant to the current listing!",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Delete Listings Cancelled"),
+          style: "cancel",
+        },
+        { text: "Delete Listing", onPress: () => deleteListing() },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const getInitialValues = () => {
     let values = {
       title: "",
@@ -140,7 +126,7 @@ function ListingEditScreen({ navigation, route }) {
       values.title = listing.title;
       values.price = listing.price.toString();
       values.description = listing.description;
-      values.category = categories[listing.categoryId - 1];
+      values.category = categoriesApi.getCategory(listing.categoryId);
       const imageUris = listing.images.map((image) => image.url);
       values.images = imageUris;
     }
@@ -171,7 +157,7 @@ function ListingEditScreen({ navigation, route }) {
             width={120}
           />
           <Picker
-            items={categories}
+            items={categoriesApi.getCategories()}
             name="category"
             numberOfColumns={3}
             PickerItemComponent={CategoryPickerItem}
@@ -186,7 +172,14 @@ function ListingEditScreen({ navigation, route }) {
             autoCorrect={false}
             placeholder="Description"
           />
-          <SubmitButton title="Post" />
+          <SubmitButton title={isAddMode ? "Add Listing" : "Update Listing"} />
+          {!isAddMode && (
+            <Button
+              title="Delete Listing"
+              color="secondary"
+              onPress={() => deleteListingAlert()}
+            />
+          )}
         </Form>
       </ScrollView>
     </Screen>

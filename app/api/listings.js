@@ -24,16 +24,28 @@ const addListing = (listing, onUploadProgress) => {
 
   if (listing.location)
     data.append("location", JSON.stringify(listing.location));
+
   console.log("addListing: ", data);
-  return client.post(endpoint, data, {
-    onUploadProgress: (progress) =>
-      onUploadProgress(progress.loaded / progress.total),
-  });
+  const config = {
+    onUploadProgress: (progressEvent) =>
+      onUploadProgress(
+        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      ),
+  };
+  return client.post(endpoint, data, config);
 };
 
-const deleteListing = (listing) => {
-  let url = `/listing/${listing.id}`;
-  return client.delete(url);
+const deleteListing = (listing, onUploadProgress) => {
+  let endpoint = `/listing/${listing.id}`;
+  let data = {};
+  const config = {
+    onDownloadProgress: function (progressEvent) {
+      onUploadProgress(
+        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      );
+    },
+  };
+  return client.delete(endpoint, data, config);
 };
 
 const initializeListings = () => client.get("/initialize");
