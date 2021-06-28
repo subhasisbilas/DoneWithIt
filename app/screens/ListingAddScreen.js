@@ -11,7 +11,6 @@ import {
 } from "../components/forms";
 import CategoryPickerItem from "../components/CategoryPickerItem";
 import Screen from "../components/Screen";
-import Button from "../components/Button";
 import FormImagePicker from "../components/forms/FormImagePicker";
 import listingsApi from "../api/listings";
 import useLocation from "../hooks/useLocation";
@@ -27,9 +26,9 @@ const validationSchema = Yup.object().shape({
   images: Yup.array().min(1, "Please select at least one image."),
 });
 
-function ListingEditScreen({ navigation, route }) {
+function ListingAddScreen({ navigation }) {
   const location = useLocation();
-  const [categories] = useCategories();
+  const [categories, categoriesLoading] = useCategories();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [formValues] = useState({
@@ -41,28 +40,10 @@ function ListingEditScreen({ navigation, route }) {
   });
 
   useEffect(() => {
-    console.log("route", route.params);
     navigation.setOptions({
-      headerTitle: "Edit Listing",
+      headerTitle: "Add Listing",
     });
-
-    const listing = route.params.listing ? route.params.listing : values;
-    formValues.title = listing.title;
-    formValues.price = listing.price.toString();
-    formValues.description = listing.description;
-    formValues.category = null; // set when categories arrive
-    const imageUris = listing.images.map((image) => image.url);
-    formValues.images = imageUris;
-  }, [route.params]);
-
-  useEffect(() => {
-    console.log("useEffect categories");
-    const listing = route.params.listing;
-    if (categories) {
-      formValues.category = categories.find((c) => c.id === listing.categoryId);
-      console.log("category real: ", formValues.category);
-    }
-  }, [categories]);
+  }, []);
 
   const handleSubmit = async (listing, { resetForm }) => {
     setProgress(0);
@@ -82,45 +63,6 @@ function ListingEditScreen({ navigation, route }) {
       reloadData: true,
       filterUser: false,
     });
-  };
-
-  const deleteListingApi = useApi(listingsApi.deleteListing);
-
-  const deleteListing = async () => {
-    try {
-      setProgress(0);
-      setUploadVisible(true);
-      const listing = route.params.listing;
-      console.log("delete listing: ", listing.title);
-      const result = await deleteListingApi.request(listing, (progress) =>
-        setProgress(progress)
-      );
-      if (!result.ok) {
-        console.log("finished: ", result.data);
-      }
-      navigation.navigate(routes.LISTINGS, {
-        reloadData: true,
-        filterUser: false,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const deleteListingAlert = () => {
-    Alert.alert(
-      "Delete Listing",
-      "This will remove all data relevant to the current listing!",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Delete Listings Cancelled"),
-          style: "cancel",
-        },
-        { text: "Delete Listing", onPress: () => deleteListing() },
-      ],
-      { cancelable: false }
-    );
   };
 
   return (
@@ -164,12 +106,7 @@ function ListingEditScreen({ navigation, route }) {
               autoCorrect={false}
               placeholder="Description"
             />
-            <SubmitButton title={"Update Listing"} />
-            <Button
-              title="Delete Listing"
-              color="secondary"
-              onPress={() => deleteListingAlert()}
-            />
+            <SubmitButton title="Add Listing" />
           </Form>
         </ScrollView>
       </Screen>
@@ -184,4 +121,4 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-export default ListingEditScreen;
+export default ListingAddScreen;

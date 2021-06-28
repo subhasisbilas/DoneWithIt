@@ -30,8 +30,7 @@ const AppNavigator = () => {
           tabBarButton: () => (
             <NewListingButton
               onPress={() =>
-                navigation.navigate("ListingEdit", {
-                  isAddMode: true,
+                navigation.navigate("ListingAdd", {
                   listingId: 0,
                 })
               }

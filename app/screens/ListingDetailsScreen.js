@@ -34,7 +34,6 @@ function ListingDetailsScreen({ navigation, route }) {
             style={styles.button}
             onPress={() => {
               navigation.navigate(routes.LISTING_EDIT, {
-                isAddMode: false,
                 listing,
               });
             }}
