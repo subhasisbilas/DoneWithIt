@@ -1,4 +1,3 @@
-import useAuth from "../auth/useAuth";
 import logger from "../utility/logger";
 import client from "./client";
 
@@ -11,7 +10,7 @@ const addListing = (listing, onUploadProgress) => {
   const data = new FormData();
   data.append("title", listing.title);
   data.append("price", listing.price);
-  data.append("categoryId", listing.category.value);
+  data.append("categoryId", listing.category.id);
   data.append("description", listing.description);
 
   listing.images.forEach((image, index) =>

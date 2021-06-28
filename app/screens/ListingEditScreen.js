@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  ScrollView,
-  Alert,
-} from "react-native";
+import { StyleSheet, ScrollView, Alert } from "react-native";
 import * as Yup from "yup";
 import logger from "../utility/logger";
 
@@ -21,8 +14,8 @@ import Screen from "../components/Screen";
 import Button from "../components/Button";
 import FormImagePicker from "../components/forms/FormImagePicker";
 import listingsApi from "../api/listings";
-import categoriesApi from "../api/categories";
 import useLocation from "../hooks/useLocation";
+import useCategories from "../hooks/useCategories";
 import UploadScreen from "./UploadScreen";
 import routes from "../navigation/routes";
 
@@ -36,23 +29,49 @@ const validationSchema = Yup.object().shape({
 
 function ListingEditScreen({ navigation, route }) {
   const location = useLocation();
+  const [categories, categoriesLoading] = useCategories();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isAddMode, setIsAddMode] = useState(false);
+  const [formValues] = useState({
+    title: "",
+    price: "",
+    description: "",
+    category: null,
+    images: [],
+  });
 
   useEffect(() => {
     console.log("route", route.params);
-
     navigation.setOptions({
       headerTitle: route.params.isAddMode ? "Add Listing" : "Edit Listing",
     });
+
+    if (!route.params.isAddMode) {
+      const listing = route.params.listing ? route.params.listing : values;
+      formValues.title = listing.title;
+      formValues.price = listing.price.toString();
+      formValues.description = listing.description;
+      formValues.category = null; // set when categories arrive
+      const imageUris = listing.images.map((image) => image.url);
+      formValues.images = imageUris;
+    }
+
     setIsAddMode(route.params.isAddMode);
   }, [route.params]);
 
-  React.useLayoutEffect(() => {
-    console.log("useLayoutEffect: ", isAddMode);
-    console.log("progress: ", progress);
-  });
+  useEffect(() => {
+    console.log("useEffect categories");
+    const listing = route.params.listing;
+    if (!route.params.isAddMode) {
+      if (categories) {
+        formValues.category = categories.find(
+          (c) => c.id === listing.categoryId
+        );
+        console.log("category real: ", formValues.category);
+      }
+    }
+  }, [categories]);
 
   const handleSubmit = async (listing, { resetForm }) => {
     setProgress(0);
@@ -113,76 +132,61 @@ function ListingEditScreen({ navigation, route }) {
     );
   };
 
-  const getInitialValues = () => {
-    let values = {
-      title: "",
-      price: "",
-      description: "",
-      category: null,
-      images: [],
-    };
-    if (!isAddMode) {
-      const listing = route.params.listing ? route.params.listing : values;
-      values.title = listing.title;
-      values.price = listing.price.toString();
-      values.description = listing.description;
-      values.category = categoriesApi.getCategory(listing.categoryId);
-      const imageUris = listing.images.map((image) => image.url);
-      values.images = imageUris;
-    }
-    return values;
-  };
-
   return (
-    <Screen style={styles.container}>
-      <ScrollView>
-        <UploadScreen
-          onDone={() => setUploadVisible(false)}
-          progress={progress}
-          visible={uploadVisible}
-        />
+    <>
+      <Screen style={styles.container}>
+        <ScrollView>
+          <UploadScreen
+            onDone={() => setUploadVisible(false)}
+            progress={progress}
+            visible={uploadVisible}
+          />
 
-        <Form
-          initialValues={getInitialValues()}
-          onSubmit={handleSubmit}
-          validationSchema={validationSchema}
-        >
-          <FormImagePicker name="images" />
-          <FormField maxLength={255} name="title" placeholder="Title" />
-          <FormField
-            keyboardType="numeric"
-            maxLength={8}
-            name="price"
-            placeholder="Price"
-            width={120}
-          />
-          <Picker
-            items={categoriesApi.getCategories()}
-            name="category"
-            numberOfColumns={3}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder="Category"
-            width="50%"
-          />
-          <FormField
-            maxLength={255}
-            multiline
-            name="description"
-            numberOfLines={3}
-            autoCorrect={false}
-            placeholder="Description"
-          />
-          <SubmitButton title={isAddMode ? "Add Listing" : "Update Listing"} />
-          {!isAddMode && (
-            <Button
-              title="Delete Listing"
-              color="secondary"
-              onPress={() => deleteListingAlert()}
+          <Form
+            enableReinitialize={true}
+            initialValues={formValues}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
+            <FormImagePicker name="images" />
+            <FormField maxLength={255} name="title" placeholder="Title" />
+            <FormField
+              keyboardType="numeric"
+              maxLength={8}
+              name="price"
+              placeholder="Price"
+              width={120}
             />
-          )}
-        </Form>
-      </ScrollView>
-    </Screen>
+            <Picker
+              items={categories}
+              name="category"
+              numberOfColumns={3}
+              PickerItemComponent={CategoryPickerItem}
+              placeholder="Category"
+              width="50%"
+            />
+            <FormField
+              maxLength={255}
+              multiline
+              name="description"
+              numberOfLines={3}
+              autoCorrect={false}
+              placeholder="Description"
+            />
+            <SubmitButton
+              title={isAddMode ? "Add Listing" : "Update Listing"}
+            />
+            {!isAddMode && (
+              <Button
+                title="Delete Listing"
+                color="secondary"
+                onPress={() => deleteListingAlert()}
+              />
+            )}
+          </Form>
+        </ScrollView>
+      </Screen>
+    </>
   );
 }
 

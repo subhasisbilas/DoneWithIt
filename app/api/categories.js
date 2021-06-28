@@ -1,5 +1,6 @@
-// step one local data; todo push to server
+import client from "./client";
 
+/*
 const categories = [
   {
     backgroundColor: "#fc5c65",
@@ -56,16 +57,12 @@ const categories = [
     value: 9,
   },
 ];
+*/
 
-const getCategory = (categoryId) => {
-  return categories[categoryId - 1];
-};
-
-const getCategories = () => {
-  return categories;
-};
+const getCategories = () => client.get("/categories");
+const getCategory = (categoryId) => client.get(`/categories/${categoryId}`);
 
 export default {
-  getCategory,
   getCategories,
+  getCategory,
 };
