@@ -40,6 +40,8 @@ function ListingEditScreen({ navigation, route }) {
     images: [],
   });
 
+  let originalImages = [];
+
   useEffect(() => {
     console.log("route", route.params);
     navigation.setOptions({
@@ -53,6 +55,7 @@ function ListingEditScreen({ navigation, route }) {
     formValues.category = null; // set when categories arrive
     const imageUris = listing.images.map((image) => image.url);
     formValues.images = imageUris;
+    originalImages = imageUris; // save copy
   }, [route.params]);
 
   useEffect(() => {
@@ -64,17 +67,23 @@ function ListingEditScreen({ navigation, route }) {
     }
   }, [categories]);
 
-  const handleSubmit = async (listing, { resetForm }) => {
-    setProgress(0);
-    setUploadVisible(true);
-    const result = await listingsApi.addListing(
-      { ...listing, location },
-      (progress) => setProgress(progress)
-    );
-    logger.log("addListing: ", result);
-    if (!result.ok) {
-      setUploadVisible(false);
-      return alert("Could not save the listing");
+  const handleSubmit = async (formData, { resetForm }) => {
+    try {
+      setProgress(0);
+      setUploadVisible(true);
+      const listing = route.params.listing;
+      const result = await listingsApi.updateListing(
+        { ...formData, location },
+        listing,
+        (progress) => setProgress(progress)
+      );
+      // logger.log("updateListing: ", result);
+      if (!result.ok) {
+        setUploadVisible(false);
+        return alert("Could not update the listing");
+      }
+    } catch (error) {
+      console.log("handleSubmit error: ", error.message);
     }
 
     resetForm();
