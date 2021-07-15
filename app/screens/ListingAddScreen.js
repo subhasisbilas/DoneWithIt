@@ -46,13 +46,14 @@ function ListingAddScreen({ navigation }) {
   }, []);
 
   const handleSubmit = async (listing, { resetForm }) => {
+    console.log("addListing handleSubmit");
     setProgress(0);
     setUploadVisible(true);
     const result = await listingsApi.addListing(
       { ...listing, location },
       (progress) => setProgress(progress)
     );
-    logger.log("addListing: ", result);
+    logger.log("addListing done: ", result.data);
     if (!result.ok) {
       setUploadVisible(false);
       return alert("Could not save the listing");

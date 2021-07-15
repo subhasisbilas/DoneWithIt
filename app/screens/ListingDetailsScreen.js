@@ -27,7 +27,7 @@ function ListingDetailsScreen({ navigation, route }) {
     navigation.setOptions({
       headerTitle: "Details",
     });
-    if (user.userId == listing.userId) {
+    if (user.id == listing.userId) {
       navigation.setOptions({
         headerRight: () => (
           <TouchableOpacity

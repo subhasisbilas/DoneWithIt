@@ -23,8 +23,9 @@ function ListingsScreen({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    const reloadData = route.params.reloadData;
     logger.log("reloadData useEffect", route.params);
+    const reloadData = route.params.reloadData;
+
     if (reloadData) {
       getListings(route);
     }
@@ -38,7 +39,7 @@ function ListingsScreen({ navigation, route }) {
       getListingsApi.request();
     } else {
       logger.log("getUserListings: ", user);
-      getListingsApi.request();
+      getListingsApi.request(user.id);
     }
   };
 
@@ -52,9 +53,10 @@ function ListingsScreen({ navigation, route }) {
             <Button title="Retry" onPress={getListingsApi.request} />
           </>
         )}
+        <AppText>data: {getListingsApi.data.length}</AppText>
         <FlatList
           data={getListingsApi.data}
-          keyExtractor={(listing) => listing.id.toString()}
+          keyExtractor={(item) => `key${item.id}`}
           renderItem={({ item }) => (
             <Card
               title={item.title}

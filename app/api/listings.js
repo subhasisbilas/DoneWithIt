@@ -4,7 +4,7 @@ import client from "./client";
 const endpoint = "/listings";
 
 const getListings = () => client.get("/listings");
-const getUserListings = () => client.get("/my/listings");
+const getUserListings = (userId) => client.get(`/my/listings/${userId}`);
 
 const addListing = (listing, onUploadProgress) => {
   const data = new FormData();
@@ -13,13 +13,14 @@ const addListing = (listing, onUploadProgress) => {
   data.append("categoryId", listing.category.id);
   data.append("description", listing.description);
 
-  listing.images.forEach((image, index) =>
+  for (const index in listing.images) {
+    const image = listing.images[index];
     data.append("images", {
       name: "image" + index,
       type: "image/jpeg",
       uri: image,
-    })
-  );
+    });
+  }
 
   if (listing.location)
     data.append("location", JSON.stringify(listing.location));
@@ -67,7 +68,8 @@ const updateListing = (listing, listingOrig, onUploadProgress) => {
 
   // if orig exists in new remove from new. dont duplicate
   // if orig does NOT exist, delete from images
-  listingOrig.images.forEach((image) => {
+  for (const index in listingOrig.images) {
+    const image = listingOrig.images[index];
     const foundIndex = listing.images.indexOf(image.url);
     const fullname = urlFilename(image.url);
     // remove _full or _thumb
@@ -82,18 +84,19 @@ const updateListing = (listing, listingOrig, onUploadProgress) => {
       existingFilenames.push(fileName);
       listing.images.splice(foundIndex, 1);
     }
-  });
+  }
 
   data.append("existingFilenames", JSON.stringify(existingFilenames));
   data.append("deletedFilenames", JSON.stringify(deletedFilenames));
 
-  listing.images.forEach((imageUri, index) =>
+  for (const index in listing.images) {
+    const imageUri = listing.images[index];
     data.append("images", {
       name: "image" + index,
       type: "image/jpeg",
       uri: imageUri,
-    })
-  );
+    });
+  }
 
   if (listing.location)
     data.append("location", JSON.stringify(listing.location));

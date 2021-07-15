@@ -43,7 +43,6 @@ function ListingEditScreen({ navigation, route }) {
   let originalImages = [];
 
   useEffect(() => {
-    console.log("route", route.params);
     navigation.setOptions({
       headerTitle: "Edit Listing",
     });
@@ -59,11 +58,9 @@ function ListingEditScreen({ navigation, route }) {
   }, [route.params]);
 
   useEffect(() => {
-    console.log("useEffect categories");
     const listing = route.params.listing;
     if (categories) {
       formValues.category = categories.find((c) => c.id === listing.categoryId);
-      console.log("category real: ", formValues.category);
     }
   }, [categories]);
 

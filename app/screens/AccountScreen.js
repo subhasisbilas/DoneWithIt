@@ -61,7 +61,7 @@ function AccountScreen({ navigation }) {
   const initializeListings = () => {
     Alert.alert(
       "Install Sample Listings",
-      "This will remove all current listings, and replace with sample data!",
+      "This will log you out; remove all current listings and users, and replace with sample data!",
       [
         {
           text: "Cancel",
@@ -84,7 +84,7 @@ function AccountScreen({ navigation }) {
         filterUser: false,
       },
     };
-    navigateTo(navItem);
+    logOut();
   };
 
   return (
