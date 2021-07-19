@@ -4,14 +4,10 @@ import client from "./client";
 const endpoint = "/listings";
 
 const getListings = (userId) => {
-  console.log("api getListings: ", userId);
   if (userId != null) {
     return client.get(`/my/listings/${userId}`);
   } else {
-    console.log("client get listing start");
-    response = client.get("/listings");
-    console.log("client get listing finish");
-    return response;
+    return client.get("/listings");
   }
 };
 
@@ -34,7 +30,6 @@ const addListing = (listing, onUploadProgress) => {
   if (listing.location)
     data.append("location", JSON.stringify(listing.location));
 
-  console.log("addListing: ", data);
   const config = {
     onUploadProgress: (progressEvent) =>
       onUploadProgress(
@@ -117,7 +112,6 @@ const updateListing = (listing, listingOrig, onUploadProgress) => {
         Math.round((progressEvent.loaded * 100) / progressEvent.total)
       ),
   };
-  console.log("data: ", data);
   return client.put(endpoint, data, config);
 };
 
