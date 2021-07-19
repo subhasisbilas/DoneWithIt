@@ -15,10 +15,9 @@ import logger from "../utility/logger";
 
 function ListingsScreen({ navigation, route }) {
   const { user } = useAuth();
+  const [filterUser, setFilterUser] = useState(false);
   const getListingsApi = useApi(
-    route.params?.filterUser
-      ? listingsApi.getUserListings
-      : listingsApi.getListings
+    route.params?.filterUser ? listingsApi.getListings : listingsApi.getListings
   );
   const [refreshing, setRefreshing] = useState(false);
 
@@ -31,8 +30,17 @@ function ListingsScreen({ navigation, route }) {
     }
   }, [route.params]);
 
+  const getIsUserFiltered = (route) => {
+    if (route.params.filterUser == undefined) {
+      return filterUser;
+    } else {
+      setFilterUser(route.params.filterUser);
+      return route.params.filterUser;
+    }
+  };
+
   const getListings = (route) => {
-    const filterUser = route.params.filterUser;
+    const filterUser = getIsUserFiltered(route);
 
     if (!filterUser) {
       logger.log("getListings: ", filterUser);

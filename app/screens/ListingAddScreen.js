@@ -62,7 +62,7 @@ function ListingAddScreen({ navigation }) {
     resetForm();
     navigation.navigate(routes.LISTINGS, {
       reloadData: true,
-      filterUser: false,
+      filterUser: undefined,
     });
   };
 

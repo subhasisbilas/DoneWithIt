@@ -86,7 +86,7 @@ function ListingEditScreen({ navigation, route }) {
     resetForm();
     navigation.navigate(routes.LISTINGS, {
       reloadData: true,
-      filterUser: false,
+      filterUser: undefined,
     });
   };
 

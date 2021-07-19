@@ -3,8 +3,17 @@ import client from "./client";
 
 const endpoint = "/listings";
 
-const getListings = () => client.get("/listings");
-const getUserListings = (userId) => client.get(`/my/listings/${userId}`);
+const getListings = (userId) => {
+  console.log("api getListings: ", userId);
+  if (userId != null) {
+    return client.get(`/my/listings/${userId}`);
+  } else {
+    console.log("client get listing start");
+    response = client.get("/listings");
+    console.log("client get listing finish");
+    return response;
+  }
+};
 
 const addListing = (listing, onUploadProgress) => {
   const data = new FormData();
@@ -119,6 +128,5 @@ export default {
   deleteListing,
   updateListing,
   getListings,
-  getUserListings,
   initializeListings,
 };
