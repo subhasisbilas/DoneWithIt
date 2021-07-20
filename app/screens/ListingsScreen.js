@@ -16,13 +16,23 @@ import logger from "../utility/logger";
 function ListingsScreen({ navigation, route }) {
   const { user } = useAuth();
   const [filterUser, setFilterUser] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
   const getListingsApi = useApi(
     route.params?.filterUser ? listingsApi.getListings : listingsApi.getListings
   );
-  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     logger.log("reloadData useEffect", route.params);
+    if (route.params.filterUser) {
+      navigation.setOptions({
+        headerTitle: "My Listings",
+      });
+    } else {
+      navigation.setOptions({
+        headerTitle: "All Listings",
+      });
+    }
     const reloadData = route.params.reloadData;
 
     if (reloadData) {
@@ -43,10 +53,8 @@ function ListingsScreen({ navigation, route }) {
     const filterUser = getIsUserFiltered(route);
 
     if (!filterUser) {
-      logger.log("getListings: ", filterUser);
       getListingsApi.request();
     } else {
-      logger.log("getUserListings: ", user);
       getListingsApi.request(user.id);
     }
   };
