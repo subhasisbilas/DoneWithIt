@@ -43,6 +43,14 @@ const menuItems = [
     },
     targetScreen: routes.MESSAGES,
   },
+  {
+    title: "Test Screen",
+    icon: {
+      name: "alpha-t-box",
+      backgroundColor: colors.secondary,
+    },
+    targetScreen: routes.TESTING,
+  },
 ];
 
 function AccountScreen({ navigation }) {
