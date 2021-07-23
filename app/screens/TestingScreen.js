@@ -1,43 +1,64 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import Screen from "../components/Screen";
-import ImageInput from "../components/ImageInput";
-import colors from "../config/colors";
+import { StyleSheet, Text, View } from "react-native";
+import Checkbox from "../components/Checkbox";
 
-function TestingScreen() {
-  const [imageUri, setImageUri] = useState();
-  const onAddImage = (uri) => {
-    setImageUri(uri);
-    console.log("onAddImage: ", uri);
-  };
+function App() {
+  const [checked, onChange] = useState(false);
 
   return (
-    <Screen style={styles.screen}>
-      <View style={styles.imageContainer}>
-        <ImageInput
-          imageUri={imageUri}
-          style={styles.image}
-          onChangeImage={(uri) => onAddImage(uri)}
+    <View style={styles.appContainer}>
+      <Text style={styles.appTitle}>Checkbox Example</Text>
+
+      <View style={styles.checkboxContainer}>
+        <Checkbox
+          checked={checked}
+          onChange={onChange}
+          buttonStyle={styles.checkboxBase}
+          activeButtonStyle={styles.checkboxChecked}
         />
+        <Text style={styles.checkboxLabel}>Use Camera</Text>
       </View>
-    </Screen>
+    </View>
   );
 }
 
+export default App;
+
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.secondary,
-  },
-  imageContainer: {
-    // backgroundColor: colors.light,
-    borderRadius: 50,
-    height: 100,
+  checkboxBase: {
+    width: 24,
+    height: 24,
     justifyContent: "center",
-    marginVertical: 10,
-    overflow: "hidden",
-    width: 100,
+    alignItems: "center",
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: "green",
+    backgroundColor: "transparent",
+  },
+
+  checkboxChecked: {
+    backgroundColor: "green",
+  },
+
+  appContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+
+  appTitle: {
+    marginVertical: 16,
+    fontWeight: "bold",
+    fontSize: 24,
+  },
+
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  checkboxLabel: {
+    marginLeft: 8,
+    fontWeight: "500",
+    fontSize: 18,
   },
 });
-
-export default TestingScreen;

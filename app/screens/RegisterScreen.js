@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import * as Yup from "yup";
 
 import Screen from "../components/Screen";
@@ -12,6 +12,8 @@ import {
   FormField,
   SubmitButton,
 } from "../components/forms";
+import FormUserIconPicker from "../components/forms/FormUserIconPicker";
+import Checkbox from "../components/Checkbox";
 import useApi from "../hooks/useApi";
 import ActivityIndicator from "../components/ActivityIndicator";
 
@@ -19,6 +21,7 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(4).label("Password"),
+  userIcon: Yup.string().optional(),
 });
 
 function RegisterScreen() {
@@ -26,6 +29,13 @@ function RegisterScreen() {
   const loginApi = useApi(authApi.login);
   const auth = useAuth();
   const [error, setError] = useState();
+  const [formValues] = useState({
+    name: "",
+    email: "",
+    password: "",
+    userIcon: null,
+  });
+  const [checked, onChange] = useState(false);
 
   const handleSubmit = async (userInfo) => {
     const result = await registerApi.request(userInfo);
@@ -51,11 +61,20 @@ function RegisterScreen() {
       <ActivityIndicator visible={registerApi.loading || loginApi.loading} />
       <Screen style={styles.container}>
         <Form
-          initialValues={{ name: "", email: "", password: "" }}
+          initialValues={formValues}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
           <ErrorMessage error={error} visible={error} />
+
+          <View style={styles.iconContainer}>
+            <FormUserIconPicker name="userIcon" />
+            <View style={styles.checkbox}>
+              <Checkbox checked={checked} onChange={onChange} />
+              <Text style={styles.checkboxLabel}>Use Camera</Text>
+            </View>
+          </View>
+
           <FormField
             autoCorrect={false}
             icon="account"
@@ -90,6 +109,19 @@ function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+  },
+  iconContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  checkbox: {
+    flexDirection: "row",
+    marginLeft: 20,
+  },
+  checkboxLabel: {
+    marginLeft: 8,
+    fontWeight: "500",
+    fontSize: 18,
   },
 });
 
