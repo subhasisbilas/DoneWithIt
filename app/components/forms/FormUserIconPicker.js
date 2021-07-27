@@ -4,10 +4,9 @@ import AppText from "../Text";
 import { useFormikContext } from "formik";
 import ImageInput from "../ImageInput";
 
-function FormUserIconPicker({ name }) {
+function FormUserIconPicker({ name, useCamera = false }) {
   const { errors, setFieldValue, touched, values } = useFormikContext();
   const imageUri = values[name];
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const handleChangeImage = (uri) => {
     setFieldValue(name, uri);
@@ -22,6 +21,7 @@ function FormUserIconPicker({ name }) {
     <ImageInput
       imageUri={imageUri}
       onChangeImage={(uri) => handleChangeImage(uri)}
+      useCamera={useCamera}
     />
   );
 }

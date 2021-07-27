@@ -11,18 +11,7 @@ import * as ImagePicker from "expo-image-picker";
 
 import colors from "../config/colors";
 
-function ImageInput({ imageUri, onChangeImage }) {
-  useEffect(() => {
-    requestPermission();
-  }, []);
-
-  const requestPermission = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("You need to enable permission to access the library");
-    }
-  };
-
+function ImageInput({ imageUri, onChangeImage, useCamera = false }) {
   const handlePress = () => {
     if (!imageUri) selectImage();
     else
@@ -32,16 +21,46 @@ function ImageInput({ imageUri, onChangeImage }) {
       ]);
   };
 
-  const selectImage = async () => {
+  const launchLibrary = async () => {
     try {
+      console.log("launchLibrary");
+
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("You need to enable permission to access the library");
+        return;
+      }
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         quality: 0.5,
       });
       if (!result.cancelled) onChangeImage(result.uri);
     } catch (error) {
-      console.log("Error reading an image", error);
+      console.log("Error reading an image from library", error);
     }
+  };
+
+  const launchCamera = async () => {
+    try {
+      console.log("launch camera");
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== "granted") {
+        alert("You need to enable permission to access the Camera");
+        return;
+      }
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.5,
+      });
+      if (!result.cancelled) onChangeImage(result.uri);
+    } catch (error) {
+      console.log("Error reading an image from camera", error);
+    }
+  };
+
+  const selectImage = async () => {
+    useCamera ? launchCamera() : launchLibrary();
   };
 
   return (

@@ -21,7 +21,7 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(4).label("Password"),
-  userIcon: Yup.string().optional(),
+  // userIcon: Yup.string().optional(),
 });
 
 function RegisterScreen() {
@@ -30,16 +30,17 @@ function RegisterScreen() {
   const auth = useAuth();
   const [error, setError] = useState();
   const [formValues] = useState({
-    name: "",
-    email: "",
-    password: "",
+    name: "arthur",
+    email: "art@domain.com",
+    password: "12345",
     userIcon: null,
   });
   const [checked, onChange] = useState(false);
 
   const handleSubmit = async (userInfo) => {
     const result = await registerApi.request(userInfo);
-    console.log("register result", result);
+    console.log("result after register: ", result);
+    console.load;
     if (!result.ok) {
       if (result.data) setError(result.data.error);
       else {
