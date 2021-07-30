@@ -101,7 +101,16 @@ function AccountScreen({ navigation }) {
         <ListItem
           title={user.name}
           subTitle={user.email}
-          image={require("../assets/mosh.jpg")}
+          image={user.iconUrl ? { uri: user.iconUrl } : null}
+          IconComponent={
+            user.iconUrl ? null : (
+              <Icon
+                name={"account-alert"}
+                size={70}
+                backgroundColor={colors.secondary}
+              />
+            )
+          }
         />
       </View>
       <View style={styles.container}>

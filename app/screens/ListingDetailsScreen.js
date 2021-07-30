@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -12,18 +12,21 @@ import { Image } from "react-native-expo-image-cache";
 import colors from "../config/colors";
 import ContactSellerForm from "../components/ContactSellerForm";
 import ListItem from "../components/lists/ListItem";
+import Icon from "../components/Icon";
 import Text from "../components/Text";
 import useAuth from "../auth/useAuth";
 import useApi from "../hooks/useApi";
 import listingsApi from "../api/listings";
 import routes from "../navigation/routes";
+import usersApi from "../api/users";
 
 function ListingDetailsScreen({ navigation, route }) {
   const listing = route.params;
   const { user } = useAuth();
-  const deleteListingApi = useApi(listingsApi.deleteListing);
+  const [listingUser, setListingUser] = useState(null);
 
   React.useLayoutEffect(() => {
+    setListingUser(getListingUser(listing.userId));
     navigation.setOptions({
       headerTitle: "Details",
     });
@@ -45,6 +48,11 @@ function ListingDetailsScreen({ navigation, route }) {
     }
   }, [navigation]);
 
+  const getListingUser = async () => {
+    const listingUser = await usersApi.getUser(listing.userId);
+    setListingUser(listingUser);
+  };
+
   return (
     <ScrollView>
       <KeyboardAvoidingView
@@ -60,13 +68,26 @@ function ListingDetailsScreen({ navigation, route }) {
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{listing.title}</Text>
           <Text style={styles.price}>${listing.price}</Text>
-          <View style={styles.userContainer}>
-            <ListItem
-              image={require("../assets/mosh.jpg")}
-              title="Mosh Hamedani"
-              subTitle="5 Listings"
-            />
-          </View>
+          {listingUser && (
+            <View style={styles.userContainer}>
+              <ListItem
+                image={
+                  listingUser.iconUrl ? { uri: listingUser.iconUrl } : null
+                }
+                IconComponent={
+                  listingUser.iconUrl ? null : (
+                    <Icon
+                      name={"account-alert"}
+                      size={70}
+                      backgroundColor={colors.secondary}
+                    />
+                  )
+                }
+                title={listingUser.name}
+                subTitle={`${listingUser.listings} Listings`}
+              />
+            </View>
+          )}
           <ContactSellerForm listing={listing} />
         </View>
       </KeyboardAvoidingView>

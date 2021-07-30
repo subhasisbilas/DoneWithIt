@@ -23,7 +23,7 @@ function LoginScreen(props) {
 
   const handleSubmit = async ({ email, password }) => {
     const result = await authApi.login(email, password);
-    console.log(result);
+    // console.log("loginResult: ", result.data);
     if (!result.ok) return setLoginFailed(true);
     setLoginFailed(false);
     auth.logIn(result.data);

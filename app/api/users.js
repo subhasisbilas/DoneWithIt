@@ -14,4 +14,13 @@ const register = (userInfo) => {
   return result;
 };
 
-export default { register };
+// return the user data or null
+const getUser = async (userId) => {
+  const result = await client.get(`/user/${userId}`);
+  if (result.ok) {
+    return result.data;
+  }
+  return null;
+};
+
+export default { register, getUser };

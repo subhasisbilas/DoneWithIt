@@ -1,64 +1,45 @@
 import React, { useState } from "react";
+import useAuth from "../auth/useAuth";
 import { StyleSheet, Text, View } from "react-native";
-import Checkbox from "../components/Checkbox";
+import colors from "../config/colors";
+import Icon from "../components/Icon";
+import ListItem from "../components/lists/ListItem";
 
 function App() {
-  const [checked, onChange] = useState(false);
+  const { user, logOut } = useAuth();
 
   return (
-    <View style={styles.appContainer}>
-      <Text style={styles.appTitle}>Checkbox Example</Text>
-
-      <View style={styles.checkboxContainer}>
-        <Checkbox
-          checked={checked}
-          onChange={onChange}
-          buttonStyle={styles.checkboxBase}
-          activeButtonStyle={styles.checkboxChecked}
+    <>
+      <Text>{`${user.name} ${user.iconUrl}`}</Text>
+      <View style={styles.container}>
+        <ListItem
+          title={user.name}
+          subTitle={user.email}
+          image={user.iconUrl ? { uri: user.iconUrl } : null}
+          IconComponent={
+            user.iconUrl ? null : (
+              <Icon
+                name={"account-alert"}
+                size={70}
+                backgroundColor={colors.secondary}
+              />
+            )
+          }
         />
-        <Text style={styles.checkboxLabel}>Use Camera</Text>
       </View>
-    </View>
+    </>
   );
 }
 
 export default App;
 
 const styles = StyleSheet.create({
-  checkboxBase: {
-    width: 24,
-    height: 24,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: "green",
-    backgroundColor: "transparent",
-  },
-
-  checkboxChecked: {
-    backgroundColor: "green",
-  },
-
   appContainer: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
-
-  appTitle: {
-    marginVertical: 16,
-    fontWeight: "bold",
-    fontSize: 24,
-  },
-
-  checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  checkboxLabel: {
-    marginLeft: 8,
-    fontWeight: "500",
-    fontSize: 18,
+  container: {
+    marginVertical: 20,
   },
 });
