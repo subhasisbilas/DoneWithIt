@@ -10,11 +10,7 @@ function UploadScreen({ onDone, progress = 0, visible = false }) {
     <Modal visible={visible}>
       <View style={styles.container}>
         {progress < 1 ? (
-          <Progress.Bar
-            color={colors.primary}
-            progress={progress}
-            width={200}
-          />
+          <Progress.CircleSnail size={100} color={["red", "green", "blue"]} />
         ) : (
           <LottieView
             autoPlay

@@ -6,27 +6,11 @@ import Icon from "../components/Icon";
 import ListItem from "../components/lists/ListItem";
 
 function App() {
-  const { user, logOut } = useAuth();
+  const { user } = useAuth();
 
   return (
     <>
-      <Text>{`${user.name} ${user.iconUrl}`}</Text>
-      <View style={styles.container}>
-        <ListItem
-          title={user.name}
-          subTitle={user.email}
-          image={user.iconUrl ? { uri: user.iconUrl } : null}
-          IconComponent={
-            user.iconUrl ? null : (
-              <Icon
-                name={"account-alert"}
-                size={70}
-                backgroundColor={colors.secondary}
-              />
-            )
-          }
-        />
-      </View>
+      <Text>{`${user.name} \n ${user.iconUrl}\n ${user.icon}`}</Text>
     </>
   );
 }

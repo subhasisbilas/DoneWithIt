@@ -49,7 +49,8 @@ function ListingDetailsScreen({ navigation, route }) {
   }, [navigation]);
 
   const getListingUser = async () => {
-    const listingUser = await usersApi.getUser(listing.userId);
+    const listingUser = await usersApi.getListingUser(listing.userId);
+    console.log("listingUser: ", listingUser);
     setListingUser(listingUser);
   };
 

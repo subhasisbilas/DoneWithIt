@@ -1,7 +1,14 @@
 import React from "react";
-import { StyleSheet, View, FlatList, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 
 import { ListItem, ListItemSeparator } from "../components/lists";
+import Text from "../components/Text";
 import colors from "../config/colors";
 import Icon from "../components/Icon";
 import listingsApi from "../api/listings";
@@ -56,6 +63,23 @@ const menuItems = [
 function AccountScreen({ navigation }) {
   const { user, logOut } = useAuth();
   const initializeListingsApi = useApi(listingsApi.initializeListings);
+
+  React.useLayoutEffect(() => {
+    console.log("useLayout");
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            console.log("Edit pressed");
+            navigation.navigate(routes.ACCOUNT_EDIT);
+          }}
+        >
+          <Text style={{ color: "blue" }}>Edit</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   const navigateTo = (item) => {
     logger.log("navigateTo: ", item);
@@ -154,6 +178,12 @@ const styles = StyleSheet.create({
   },
   container: {
     marginVertical: 20,
+  },
+  button: {
+    color: colors.secondary,
+    alignItems: "center",
+    padding: 10,
+    color: "blue",
   },
 });
 

@@ -21,7 +21,6 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(4).label("Password"),
-  // userIcon: Yup.string().optional(),
 });
 
 function RegisterScreen() {
@@ -33,11 +32,13 @@ function RegisterScreen() {
     name: "arthur",
     email: "art@domain.com",
     password: "12345",
-    userIcon: null,
+    iconUrl: null,
   });
   const [checked, onChange] = useState(false);
 
   const handleSubmit = async (userInfo) => {
+    console.log("register handleSubit: ", userInfo);
+
     const result = await registerApi.request(userInfo);
     console.log("result after register: ", result);
     console.load;
@@ -69,7 +70,7 @@ function RegisterScreen() {
           <ErrorMessage error={error} visible={error} />
 
           <View style={styles.iconContainer}>
-            <FormUserIconPicker name="userIcon" />
+            <FormUserIconPicker name="iconUrl" />
             <View style={styles.checkbox}>
               <Checkbox checked={checked} onChange={onChange} />
               <Text style={styles.checkboxLabel}>Use Camera</Text>

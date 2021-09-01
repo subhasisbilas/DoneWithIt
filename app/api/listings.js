@@ -32,22 +32,19 @@ const addListing = (listing, onUploadProgress) => {
 
   const config = {
     onUploadProgress: (progressEvent) =>
-      onUploadProgress(
-        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      ),
+      onUploadProgress(Math.trunc(progressEvent.loaded / progressEvent.total)),
   };
   return client.post(endpoint, data, config);
 };
 
-const deleteListing = (listing, onUploadProgress) => {
+const deleteListing = (listing, onDownloadProgress) => {
   let endpoint = `/listing/${listing.id}`;
   let data = {};
   const config = {
-    onDownloadProgress: function (progressEvent) {
-      onUploadProgress(
-        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      );
-    },
+    onDownloadProgress: (progressEvent) =>
+      onDownloadProgress(
+        Math.trunc(progressEvent.loaded / progressEvent.total)
+      ),
   };
   return client.delete(endpoint, data, config);
 };
@@ -70,6 +67,8 @@ const updateListing = (listing, listingOrig, onUploadProgress) => {
   let deletedFilenames = []; // orig images user has deleted.
   let existingFilenames = []; // orig images not to be uploaded again
 
+  console.log("listingOrig.images: ", listingOrig.images);
+  console.log("listing.images: ", listing.images);
   // if orig exists in new remove from new. dont duplicate
   // if orig does NOT exist, delete from images
   for (const index in listingOrig.images) {
@@ -108,9 +107,7 @@ const updateListing = (listing, listingOrig, onUploadProgress) => {
   let endpoint = `/listings/${listingOrig.id}`;
   const config = {
     onUploadProgress: (progressEvent) =>
-      onUploadProgress(
-        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      ),
+      onUploadProgress(Math.trunc(progressEvent.loaded / progressEvent.total)),
   };
   return client.put(endpoint, data, config);
 };

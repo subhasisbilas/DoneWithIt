@@ -6,4 +6,5 @@ export default Object.freeze({
   MESSAGES: "Messages",
   REGISTER: "Register",
   TESTING: "Testing",
+  ACCOUNT_EDIT: "AccountEdit",
 });

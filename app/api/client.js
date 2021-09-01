@@ -29,7 +29,7 @@ apiClient.get = async (url, params, axiosConfig) => {
 
 const remove = apiClient.delete;
 apiClient.delete = async (url, params, axiosConfig) => {
-  console.log("apiClient.delte", url);
+  console.log("apiClient.delete", url);
   const response = await remove(url, params, axiosConfig);
 
   if (response.ok) {

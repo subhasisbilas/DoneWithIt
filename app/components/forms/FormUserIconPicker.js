@@ -9,6 +9,7 @@ function FormUserIconPicker({ name, useCamera = false }) {
   const imageUri = values[name];
 
   const handleChangeImage = (uri) => {
+    console.log("handleChangeImage: ", uri);
     setFieldValue(name, uri);
   };
 
