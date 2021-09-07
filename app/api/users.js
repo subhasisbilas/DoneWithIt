@@ -17,6 +17,11 @@ const register = (userInfo) => {
   return result;
 };
 
+const changePassword = (userId, password) => {
+  let endpoint = `/users/password`;
+  return client.post(endpoint, { userId, password });
+};
+
 // return the 'user'  or null
 const getUser = async (userId) => {
   console.log("getUser: ", userId);
@@ -70,7 +75,7 @@ const updateUser = (userInfo, user, onUploadProgress) => {
     onUploadProgress: (progressEvent) =>
       onUploadProgress(Math.trunc(progressEvent.loaded / progressEvent.total)),
   };
-
+  console.log("data: ", data);
   return client.put(endpoint, data, config);
 };
 
@@ -88,4 +93,11 @@ const deleteUser = (user, onDownloadProgress) => {
   return resp;
 };
 
-export default { register, deleteUser, updateUser, getUser, getListingUser };
+export default {
+  register,
+  changePassword,
+  deleteUser,
+  updateUser,
+  getUser,
+  getListingUser,
+};

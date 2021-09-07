@@ -7,4 +7,5 @@ export default Object.freeze({
   REGISTER: "Register",
   TESTING: "Testing",
   ACCOUNT_EDIT: "AccountEdit",
+  ACCOUNT_PASSWORD_CHANGE: "AccountPassword",
 });

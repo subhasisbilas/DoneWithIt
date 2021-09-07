@@ -141,6 +141,14 @@ function AccountEditScreen({ navigation }) {
             color="secondary"
             onPress={() => deleteUserAlert()}
           />
+          <Button
+            title="Change Pasword"
+            color="secondary"
+            onPress={() => {
+              console.log("Change Password pressed");
+              navigation.navigate(routes.ACCOUNT_PASSWORD_CHANGE);
+            }}
+          />
         </Form>
       </Screen>
     </>
