@@ -1,7 +1,9 @@
 import client from "./client";
 
-const login = (email, password) =>
-  client.post("/auth/login", { email, password });
+const login = (email, password) => {
+  const result = client.post("/auth/login", { email, password });
+  return result;
+};
 
 // called after updating our user
 const refresh = (userId) => {

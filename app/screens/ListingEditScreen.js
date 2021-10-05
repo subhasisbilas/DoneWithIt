@@ -97,7 +97,6 @@ function ListingEditScreen({ navigation, route }) {
       setProgress(0);
       setUploadVisible(true);
       const listing = route.params.listing;
-      console.log("delete listing: ", listing.title);
       const result = await deleteListingApi.request(listing, (progress) =>
         setProgress(progress)
       );
