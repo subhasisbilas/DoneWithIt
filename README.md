@@ -8,5 +8,6 @@ Utilizes a backend service : DoneWithItService for data storage.
 
 Configure the url of the service in app/config/settings.js
 
-https://github.com/artgravina/DoneWithIt.git
-https://github.com/artgravina/DoneWithIt-Service.git
+App: https://github.com/artgravina/DoneWithIt.git
+
+Server: https://github.com/artgravina/DoneWithIt-Service.git
