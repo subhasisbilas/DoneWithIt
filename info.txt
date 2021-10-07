@@ -1,0 +1,3 @@
+Location of Android tools:
+/Users/agravina/Library/Android/sdk
+

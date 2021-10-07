@@ -29,9 +29,9 @@ function RegisterScreen() {
   const auth = useAuth();
   const [error, setError] = useState();
   const [formValues] = useState({
-    name: "arthur",
-    email: "art@domain.com",
-    password: "12345",
+    name: "",
+    email: "",
+    password: "",
     iconUrl: null,
   });
   const [checked, onChange] = useState(false);
